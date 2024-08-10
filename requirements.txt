@@ -1,2 +1,4 @@
 Flask==3.0.3
 weasyprint==62.3
+cairo==1.16.0
+pango==1.48.10
