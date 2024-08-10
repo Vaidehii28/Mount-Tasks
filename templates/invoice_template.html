@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mount Shilajit Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      font-size: 12px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+    .header img {
+      height: 80px;
+      width: auto;
+    }
+    .header-info {
+      text-align: right;
+    }
+    .header-info p {
+      margin: 0;
+    }
+    .header-info .date {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .address-container {
+      display: flex;
+      justify-content: space-between;
+      background-color: #f1f1f1;
+      padding: 10px 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    .address {
+      width: 48%;
+    }
+    .address p {
+      margin: 5px 0;
+    }
+    .font-bold {
+      font-weight: bold;
+    }
+    .invoice-details {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    .invoice-details th, .invoice-details td {
+      border-bottom: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .invoice-details th {
+      background-color: #f4f4f4;
+    }
+    .total-section {
+      margin-top: 20px;
+      text-align: right;
+    }
+    .total-section table {
+      width: auto;
+      margin-left: auto;
+    }
+    .total-section td {
+      padding: 8px;
+    }
+    .total-section .total-label {
+      font-weight: bold;
+      background-color: #f0f0f0;
+    }
+    .total-section .total-value {
+      text-align: right;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #f1f1f1;
+      color: #000000;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    .footer span {
+      color: #ffffff;
+    }
+    .payment-details {
+      margin-top: 20px;
+    }
+    .payment-details p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Mount Shilajit Logo">
+      <div class="header-info">
+        <p>Invoice date: <span class="date" style="font-size: 12px; color: #005bc3;">{{ invoice_date }}</span></p>
+        <p>Invoice number: <span style="color: #005bc3;">{{ invoice_number }}</span></p>
+      </div>
+    </div>
+    <div class="address-container">
+      <div class="address">
+        <p class="font-bold" style="font-size: 14px;">Mount Shilajit</p>
+        <p>E 601 AALAP HEIGHTS</p>
+        <p>GANDHIWADI ROAD BELA FARM</p>
+        <p>UMBERGAON, Valsad, Gujarat</p>
+        <p>Pincode - 396170</p>
+      </div>
+      <div class="address" style="text-align: right;">
+        <p class="font-bold" style="font-size: 14px;">Customer details</p>
+        <p>{{ customer_name }}</p>
+        <p>{{ customer_address }}</p>
+      </div>
+    </div>
+    <table class="invoice-details" width="100%">
+      <thead>
+        <tr style="color: #005bc3;">
+          <th>#</th>
+          <th>Product details</th>
+          <th>Price</th>
+          <th>Qty.</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item, quantity, price, tax, subtotal in items %}
+        <tr>
+          <td>{{ loop.index }}.</td>
+          <td>{{ item }}</td>
+          <td>Rs. {{ price }}</td>
+          <td>{{ quantity }}</td>
+          <td>Rs. {{ subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="total-section">
+      <table>
+        <tr>
+          <td class="total-label">Net total:</td>
+          <td class="total-value">Rs. {{ subtotal }}</td>
+        </tr>
+        <tr>
+          <td class="total-label">Taxes:</td>
+          <td class="total-value">Rs. {{ taxes }}</td>
+        </tr>
+        <tr>
+          <td class="total-label" style="background-color: #005bc3; color: #fff;">Total amount:</td>
+          <td class="total-value" style="background-color: #005bc3; color: #fff;">Rs. {{ total }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="payment-details">
+      <p class="font-bold" style="color: #005bc3;">PAYMENT DETAILS</p>
+      <p>Payment Mode: {{ payment_method }}</p>
+      {% if payment_method == 'Online' %}
+        <p>Method: {{ payment_method_type }}</p>
+        {% if payment_method_type == 'UPI' %}
+          <p>UPI Reference Number: {{ upi_reference }}</p>
+        {% else %}
+          <p>Transaction ID: {{ transaction_id }}</p>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="notes">
+      <p class="font-bold" style="color: #005bc3;">
+        <br>
+        <br>Notes</p>
+      <p class="italic">Mount Shilajit is collected from rocks of Dhaulagiri, purified to remove impurities, and is then immediately packed for direct use by the consumer.</p>
+    </div>
+  </div>
+  <footer class="footer">
+    Mount Shilajit <span style="color: #000000;">   |   </span> <a href="http://www.themountshilajit.com" style="color: #005bc3; text-decoration: underline;">www.themountshilajit.com</a>
+  </footer>
+</body>
+</html>
