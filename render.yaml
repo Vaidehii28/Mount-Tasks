@@ -1,0 +1,3 @@
+build:
+  steps:
+    - ./render-build.sh
