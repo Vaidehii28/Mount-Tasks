@@ -196,6 +196,22 @@
         .items-table td[data-label="Action"]:before {
             content: "Action";
         }
+        .notification {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     }
 
     </style>
@@ -227,13 +243,44 @@
                 transactionId.style.display = 'none';
             }
         }
+        function toggleEmailDetails() {
+            var method = document.getElementById('mail_yes_no').value;
+            var emailInput = document.getElementById('email_input');
+
+            if (method === 'Yes') {
+                emailInput.style.display = 'block';
+            } else {
+                emailInput.style.display = 'none';
+            }
+        }
     </script>
+    <script>
+        function showNotification() {
+            var emailOption = document.getElementById('mail_yes_no').value;
+            var notification = document.getElementById('notification');
+            
+            if (emailOption === 'Yes') {
+                notification.textContent = 'You will receive a mail from us with the invoice of your order attached in 2-3 minutes!';
+                notification.className = 'notification success';
+            } else if (emailOption === 'No') {
+                notification.textContent = 'Your invoice has been downloaded!';
+                notification.className = 'notification success';
+            } else {
+                notification.textContent = '';
+                notification.className = 'notification';
+            }
+
+            notification.style.display = 'block';
+        }
+    </script>
+    
 </head>
 <body>
     <div class="container">
         <h1>Mount Invoice Generator</h1>
         <a href="/logout" class="logout-btn">Logout</a>
-        <form method="post" action="/">
+
+        <form method="post" action="/" onsubmit="showNotification()">
             <label for="invoice_date">Invoice Date:</label>
             <input type="date" id="invoice_date" name="invoice_date" required>
 
@@ -300,8 +347,21 @@
                 </table>
                 <button type="button" id="add-item">Add Another Item</button>
             </div>
+            <label for="mail_yes_no">Send Invoice via Email:</label>
+            <select id="mail_yes_no" name="mail_yes_no" onchange="toggleEmailDetails()" required>
+                <option value="" disabled selected>Select Option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
 
-            <button type="submit">Generate Invoice</button>
+            <div id="email_input" style="display: none;">
+                <label for="email_id">Enter Customer's Email Id:</label>
+                <input type="email" id="email_id" name="email_id">
+            </div>
+
+            <button type="submit">Get Invoice</button>
+            
+            <div id="notification" class="notification"></div>
         </form>
     </div>
 
@@ -327,5 +387,11 @@
             }
         });
     </script>
+    <script>
+        function showAlert() {
+            alert("You will receive a mail from us with the invoice of your order attached in 2-3 minutes!");
+        }
+    </script>    
+    
 </body>
 </html>
